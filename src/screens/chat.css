@@ -1,0 +1,57 @@
+.speech-container{
+    margin-top: 150px;
+    width: 400px;
+    height: fit-content;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.next-btn{
+    background-color: #2b50a1;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+.ques-container{
+    height: 50px;
+}
+
+.answer-container{
+    margin-top: 150px;
+    width: 400px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 20px;
+}
+
+.speech-wrapper{
+    justify-content: center;
+    display: flex;
+}
+
+.submit-answers{
+    position: relative;
+    bottom: -80%;
+    background-color: #2b50a1;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+.ans{
+    border: solid 1px #2b50a1 ;
+    padding: 4px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}

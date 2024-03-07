@@ -1,0 +1,51 @@
+.page-body{
+    margin-top: 70px;
+    margin-left: 220px;
+    margin-right: 20px;
+}
+
+.table-wrapper{
+    padding-top: 50px;
+}
+
+
+table thead{
+    background-color: #2b50a1;
+    color: white;
+}
+
+table th{
+    padding: 6px;
+    border-width: 0.5px;
+    text-align: center !important;
+}
+
+table td{
+    padding: 6px;
+    text-align: center;
+    border-width: 0.5px;
+}
+
+table .odd{
+    background-color: #d6e0f5 !important;
+}
+
+.dataTable{
+    width: 100%;
+}
+
+.dataTables_wrapper{
+    width: 100%;
+}
+
+.custom-class-column-1{
+    max-width: 20px !important;
+}
+
+.custom-class-column-2{
+    max-width: 30px !important;
+}
+
+.custom-class-column-3{
+    max-width: 70px !important;
+}
