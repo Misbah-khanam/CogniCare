@@ -18,6 +18,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faMicrophone, faPlay, faStop, faRefresh } from "@fortawesome/free-solid-svg-icons";
+import useWebcamScreenshotInterval from '../conponents/useWebcamScreenshotInterval';
+import { useSpeechSynthesis } from 'react-speech-kit';
 
 const Chat = () => {
     library.add(faMicrophone, faPlay, faStop, faRefresh)
@@ -31,6 +33,9 @@ const Chat = () => {
 
     const [selectedLanguage, setSelectedLanguage] = useState('en-in');
 
+    const screenshotsBlobs = useWebcamScreenshotInterval(15000);
+    const [screenshotUrls, setScreenshotUrls] = useState([]);
+
     const handleChange = async(selectedOption) => {
         setSelectedLanguage(selectedOption.value);
         let translated_ques = [...questions]
@@ -42,6 +47,10 @@ const Chat = () => {
         }
     };
 
+    const { speak, cancel, speaking, supported, voices } = useSpeechSynthesis()
+    const [voiceIndex, setVoiceIndex] = useState(null);
+    const voice = voices[voiceIndex] || null
+    
     const all_questions = [
         "How have you been feeling emotionally lately?",
         "What helps you feel calm when you're stressed?",
@@ -94,8 +103,26 @@ const Chat = () => {
         "How do you balance work/school responsibilities with self-care?",
         "Are there any habits or routines that contribute to your overall well-being?"
     ];
+
+
+    useEffect(() => {
+        const urls = screenshotsBlobs.map(blob => URL.createObjectURL(blob));
+        setScreenshotUrls(urls);
+    }, [screenshotsBlobs]);
+
     
     useEffect(() => {
+
+        // api.post(
+        //     'score/predict_emotion/', {
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'X-CSRFToken': '{{ csrf_token }}',
+        //     }
+        // }
+        // ).then(response => {
+        //     console.log(response.data)
+        // })
 
         function getRandomQuestions(array, num) {
             const shuffled = array.sort(() => 0.5 - Math.random());
@@ -168,16 +195,24 @@ const Chat = () => {
 
     const handleSubmit = () => {
         if (answers.length === 5) {
+
+            const formData = new FormData();
+            screenshotsBlobs.forEach((image, index) => {
+                const file = new File([image], `image_${index}.png`, { type: 'image/png' });
+                formData.append('images[]', file);
+            });
+            formData.append('member_name',member.name)
+            formData.append('member_id',member.id)
+            formData.append('answers',answers)
+            formData.append('userEmail',JSON.parse(localStorage.getItem("user"))[0].fields.email)
+
+
             setMsg("calculating Score....")
             setMsgModal(true)
             api.post(
-                'score/calculate-score/', {
-                member: member,
-                answers: answers,
-                userEmail: JSON.parse(localStorage.getItem("user"))[0].fields.email,
-            }, {
+                'score/calculate-score/', formData, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}',
                 }
             }
@@ -194,6 +229,26 @@ const Chat = () => {
                 }
             })
         }
+
+        // if (screenshotsBlobs.length > 0) {
+        //     const formData = new FormData();
+    
+        //     screenshotsBlobs.forEach((image, index) => {
+        //         const file = new File([image], `image_${index}.png`, { type: 'image/png' });
+        //         formData.append('images[]', file);
+        //     });
+    
+        //     api.post(
+        //         'score/predict_emotion/', formData, {
+        //         headers: {
+        //             // Do not manually set 'Content-Type' to 'application/json'
+        //             // 'Content-Type': 'application/json',
+        //             'X-CSRFToken': '{{ csrf_token }}',
+        //         }
+        //     }).then(response => {
+        //         console.log(response.data);
+        //     });
+        // }
     }
 
     return (
@@ -229,6 +284,14 @@ const Chat = () => {
 
                 </div>
             </div>
+
+            <center>
+                <div className="image-container">
+                    {screenshotUrls.map((url, index) => (
+                    <img key={index} src={url} alt={`Screenshot ${index}`} />
+                    ))}
+                </div>
+            </center>
 
             <TEModal show={msgModal} setShow={setMsgModal}>
                 <TEModalDialog>
